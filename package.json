@@ -7,6 +7,9 @@
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
   "author": "sachaos <sakataku7@gmail.com> (https://sachaos.dev/)",
   "license": "MIT",
   "dependencies": {
