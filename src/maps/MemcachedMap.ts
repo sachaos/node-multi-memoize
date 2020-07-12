@@ -37,7 +37,13 @@ export class MemcachedMap implements AsyncMapCache {
     async set(key: string, value: any, namespace?: string): Promise<this> {
         const conn = await this.client.connect()
         const k = this.buildKey(key, namespace)
-        await conn.set(k, this.serializer.serialize(value), true, this.opt.expire || 0)
+
+        const val = this.serializer.serialize(value)
+        try {
+            await conn.set(k, val, true, this.opt.expire || 0)
+        } catch (e) {
+            console.error(e)
+        }
 
         return this
     }
