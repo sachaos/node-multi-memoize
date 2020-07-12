@@ -42,7 +42,8 @@ export class MemcachedMap implements AsyncMapCache {
         try {
             await conn.set(k, val, true, this.opt.expire || 0)
         } catch (e) {
-            console.error(e)
+            console.error(`[multi-memoize] MemcachedMap set failed: ${e}`)
+            console.error(`[multi-memoize] byte length ${Buffer.byteLength(val)}`)
         }
 
         return this
