@@ -1,6 +1,6 @@
 import {AsyncMapCache} from "../types";
 import mmemoize from "../index";
-import {Chain, AsyncMap} from "../maps";
+import {Chain, AsyncMap} from "./index";
 
 export class FoolMapForTest implements AsyncMapCache {
     async get(key: string): Promise<{ value: any; ok: boolean }> {
@@ -19,5 +19,3 @@ test('mmemoize chain', async () => {
     expect(await y()).toBe(4)
     expect(await y()).toBe(4)
 });
-
-

@@ -1,5 +1,5 @@
-import mmemoize from "../index";
-import {AsyncMap} from "../maps/AsyncMap";
+import mmemoize from "./index";
+import {AsyncMap} from "./maps/AsyncMap";
 
 const counter = (x: number) => {return (async () => {return x += 1})}
 
