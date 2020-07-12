@@ -13,6 +13,8 @@
   "author": "sachaos <sakataku7@gmail.com> (https://sachaos.dev/)",
   "license": "MIT",
   "dependencies": {
+    "async-rwlock": "^1.1.1",
+    "memcached-client": "^0.2.1",
     "typescript": "^3.9.6"
   }
 }
