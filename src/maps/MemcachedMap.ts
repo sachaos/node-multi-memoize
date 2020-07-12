@@ -43,8 +43,9 @@ export class MemcachedMap implements AsyncMapCache {
     }
 
     private buildKey(key: string, namespace?: string): string {
-        if (namespace === undefined) return key
+        const k = key === "" ? "noarg" : key
+        if (namespace === undefined) return k
 
-        return `${namespace}-${key}`
+        return `${namespace}-${k}`
     }
 }
