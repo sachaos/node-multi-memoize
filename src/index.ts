@@ -1,20 +1,20 @@
 import {AsyncMapCache, MemoizedFunction} from "./types";
-import {AsyncMap} from "./maps/AsyncMap";
+import {AsyncMap} from "./maps";
 
-export function mmemoize<S, T extends (...args: any[]) => Promise<S>>(func: T, opts: {resolver?: (...args: any[]) => string, map?: AsyncMapCache} = {}): T & MemoizedFunction {
+export function mmemoize<S, T extends (...args: any[]) => Promise<S>>(func: T, opts: {resolver?: (...args: any[]) => string, map?: AsyncMapCache, namespace?: string} = {}): T & MemoizedFunction {
     const memoized = (async (...args: any[]): Promise<S> => {
-        const { resolver } = opts
+        const { resolver, namespace } = opts
         const key = resolver ? resolver(args) : String(args[0])
 
         const cache = memoized.cache
 
-        const {value, ok} = await cache.get(key)
+        const {value, ok} = await cache.get(key, namespace)
         if (ok) {
             return value
         }
 
         const result = await func()
-        await cache.set(key, result)
+        await cache.set(key, result, namespace)
 
         return result
     }) as T & MemoizedFunction

@@ -3,9 +3,9 @@ import {AsyncMap} from "../maps/AsyncMap";
 
 const counter = (x: number) => {return (async () => {return x += 1})}
 
-function sleep(waitSec: number) {
+function sleep(waitMilliSec: number) {
     return new Promise(function (resolve) {
-        setTimeout(function() { resolve() }, waitSec);
+        setTimeout(function() { resolve() }, waitMilliSec);
     });
 }
 
@@ -20,10 +20,10 @@ test('mmemoize basic', async () => {
 });
 
 test('mmemoize with expire', async () => {
-    const y = mmemoize(counter(3), {map: new AsyncMap({expire: 2})})
+    const y = mmemoize(counter(3), {map: new AsyncMap({expire: 1 * 1000})})
     expect(await y()).toBe(4)
     expect(await y()).toBe(4)
 
-    await sleep(5)
+    await sleep(2 * 1000)
     expect(await y()).toBe(5)
 });

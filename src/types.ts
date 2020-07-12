@@ -3,6 +3,6 @@ export interface MemoizedFunction {
 }
 
 export interface AsyncMapCache {
-    set(key: string, value: any): Promise<this>
-    get(key: string): Promise<{value: any, ok: boolean}>
+    set(key: string, value: any, namespace?: string): Promise<this>
+    get(key: string, namespace?: string): Promise<{value: any, ok: boolean}>
 }
