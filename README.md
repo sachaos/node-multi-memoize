@@ -9,7 +9,7 @@ npm i --save multi-memoize
 
 ## Usage
 
-```
+```typescript
 import mmemoize, {Chain, AsyncMap, MemcachedMap} from 'multi-memoize'
 
 // To use memcached backend
