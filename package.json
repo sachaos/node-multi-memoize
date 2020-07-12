@@ -1,5 +1,5 @@
 {
-  "name": "mmemoize",
+  "name": "multi-memoize",
   "version": "1.0.0",
   "description": "Multi-Level cache version Memoize",
   "main": "dist/index.js",
