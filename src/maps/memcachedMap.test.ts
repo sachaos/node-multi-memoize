@@ -1,8 +1,8 @@
 import {MemcachedMap} from "./";
-import {Memcached} from "memcached-client/lib/src/memcached";
+import * as Memcached from "memcached";
 
 test('MemcachedMap', async () => {
-    const map = new MemcachedMap(new Memcached("127.0.0.1", 11211))
+    const map = new MemcachedMap(new Memcached("127.0.0.1:11211"))
     await map.set("test", 3)
 
     expect(await map.get("test")).toStrictEqual({ok: true, value: 3})
@@ -10,7 +10,7 @@ test('MemcachedMap', async () => {
 });
 
 test('MemcachedMap with object', async () => {
-    const map = new MemcachedMap(new Memcached("127.0.0.1", 11211))
+    const map = new MemcachedMap(new Memcached("127.0.0.1:11211"))
     await map.set("object", {
         a: 3,
         b: 8,
@@ -20,16 +20,9 @@ test('MemcachedMap with object', async () => {
 });
 
 test('MemcachedMap with namespace', async () => {
-    const map = new MemcachedMap(new Memcached("127.0.0.1", 11211))
+    const map = new MemcachedMap(new Memcached("127.0.0.1:11211"))
     await map.set("foo", "bar", "namespace")
 
     expect(await map.get("foo")).toStrictEqual({ok: false, value: undefined})
     expect(await map.get("foo", "namespace")).toStrictEqual({ok: true, value: "bar"})
-});
-
-test('MemcachedMap with no arg', async () => {
-    const map = new MemcachedMap(new Memcached("127.0.0.1", 11211))
-    await map.set("", 1)
-
-    expect(await map.get("")).toStrictEqual({ok: true, value: 1})
 });

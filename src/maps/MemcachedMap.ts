@@ -1,5 +1,5 @@
 import {AsyncMapCache} from "../types";
-import Memcached, {Metadata} from 'memcached-client'
+import * as Memcached from 'memcached'
 
 interface Serializer {
     serialize(val: any): string
@@ -8,11 +8,11 @@ interface Serializer {
 
 class DefaultSerializer implements Serializer {
     serialize(val: any): string {
-        return JSON.stringify(val)
+        return Buffer.from(JSON.stringify(val), 'utf8').toString('base64')
     }
 
     deserialize(serialized: string): any {
-        return JSON.parse(serialized)
+        return JSON.parse(Buffer.from(serialized, 'base64').toString('utf8'))
     }
 }
 
@@ -23,36 +23,44 @@ export class MemcachedMap implements AsyncMapCache {
     }
 
     async get(key: string, namespace?: string): Promise<{ value: any; ok: boolean }> {
-        const conn = await this.client.connect()
         const k = this.buildKey(key, namespace)
-        const data: {[key: string]: Metadata} = await conn.get(k).catch(() => ({}));
+        return (new Promise((resolve) => {
+            this.client.get(k, (err, data) => {
+                if (!!err) {
+                    resolve({value: undefined, ok: false})
+                    return
+                }
 
-        if (data[k]) {
-            return {value: this.serializer.deserialize(data[k].value), ok: true}
-        }
+                if (data === undefined) {
+                    resolve({value: undefined, ok: false})
+                    return
+                }
 
-        return {value: undefined, ok: false}
+                resolve({ok: true, value: this.serializer.deserialize(data)})
+            })
+        }))
     }
 
     async set(key: string, value: any, namespace?: string): Promise<this> {
-        const conn = await this.client.connect()
         const k = this.buildKey(key, namespace)
-
         const val = this.serializer.serialize(value)
-        try {
-            await conn.set(k, val, true, this.opt.expire || 0)
-        } catch (e) {
-            console.error(`[multi-memoize] MemcachedMap set failed: ${e}`)
-            console.error(`[multi-memoize] byte length ${Buffer.byteLength(val)}`)
-        }
 
-        return this
+        return (new Promise((resolve, reject) => {
+            this.client.set(k, val, this.opt.expire || 0, (err) => {
+                if (!!err) {
+                    console.error(`[multi-memoize] MemcachedMap set failed: ${err}`)
+                    reject(err)
+                    return
+                }
+
+                resolve(this)
+            })
+        }))
     }
 
     private buildKey(key: string, namespace?: string): string {
-        const k = key === "" ? "noarg" : key
-        if (namespace === undefined) return k
+        if (namespace === undefined) return key
 
-        return `${namespace}-${k}`
+        return `${namespace}-${key}`
     }
 }

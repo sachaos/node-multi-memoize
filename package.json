@@ -14,8 +14,9 @@
   "author": "sachaos <sakataku7@gmail.com> (https://sachaos.dev/)",
   "license": "MIT",
   "dependencies": {
+    "@types/memcached": "^2.2.6",
     "async-rwlock": "^1.1.1",
-    "memcached-client": "^0.2.1",
+    "memcached": "^2.2.2",
     "typescript": "^3.9.6"
   },
   "devDependencies": {
