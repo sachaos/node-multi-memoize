@@ -1,5 +1,5 @@
 import {AsyncMapCache} from "../types";
-import * as Memcached from 'memcached'
+import Memcached from 'memcached'
 
 interface Serializer {
     serialize(val: any): string
