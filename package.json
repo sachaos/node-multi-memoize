@@ -1,6 +1,6 @@
 {
   "name": "multi-memoize",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Multi-Level cache version Memoize",
   "main": "dist/index.js",
   "scripts": {
