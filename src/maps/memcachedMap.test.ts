@@ -1,5 +1,5 @@
 import {MemcachedMap} from "./";
-import * as Memcached from "memcached";
+import Memcached from "memcached";
 
 test('MemcachedMap', async () => {
     const map = new MemcachedMap(new Memcached("127.0.0.1:11211"))
