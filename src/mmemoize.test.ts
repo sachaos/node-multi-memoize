@@ -25,7 +25,7 @@ test('mmemoize with argument', async () => {
 
     const y = mmemoize(echo)
     expect(await y('awesome')).toBe('awesome')
-    expect(await y('great')).toBe('awesome')
+    expect(await(await y.cache.get("awesome")).value).toBe("awesome");
 });
 
 test('mmemoize with expire', async () => {
@@ -35,4 +35,13 @@ test('mmemoize with expire', async () => {
 
     await sleep(2 * 1000)
     expect(await y()).toBe(5)
+});
+
+test("mmemoize with argument and expire", async () => {
+    const y = mmemoize(echo, { map: new AsyncMap({ expire: 1 * 1000 }) });
+    expect(await y("awesome")).toBe("awesome");
+    expect(await (await y.cache.get("awesome")).value).toBe("awesome");
+
+    await sleep(2 * 1000);
+    expect(await(await y.cache.get("awesome")).value).toBe(undefined);
 });
