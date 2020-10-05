@@ -1,7 +1,8 @@
 import mmemoize from "./index";
 import {AsyncMap} from "./maps/AsyncMap";
 
-const counter = (x: number) => {return (async () => {return x += 1})}
+const echo = async (x: string) => { return x }
+const counter = (x: number) => { return (async () => { return x += 1 }) }
 
 function sleep(waitMilliSec: number) {
     return new Promise(function (resolve) {
@@ -17,6 +18,14 @@ test('mmemoize basic', async () => {
     const y = mmemoize(counter(3))
     expect(await y()).toBe(4)
     expect(await y()).toBe(4)
+});
+
+test('mmemoize with argument', async () => {
+    expect(await echo('awesome')).toBe('awesome')
+
+    const y = mmemoize(echo)
+    expect(await y('awesome')).toBe('awesome')
+    expect(await y('great')).toBe('awesome')
 });
 
 test('mmemoize with expire', async () => {
